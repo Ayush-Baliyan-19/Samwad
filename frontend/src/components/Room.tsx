@@ -125,7 +125,12 @@ const Room = ({
       roomIdRef.current = roomId;
       userIdRef.current = socket?.id || "";
       setLobby(false);
-      const pc = new RTCPeerConnection();
+      const pc = new RTCPeerConnection({
+        iceServers: [
+          { urls: "stun:stun.l.google.com:19302" }, // Free STUN
+        ],
+      });
+
 
       setSendingPc(pc);
       if (localVideoTrack) {
@@ -160,7 +165,12 @@ const Room = ({
     socket.on("offer", async ({ roomId, sdp: remoteSdp }) => {
       console.log("received offer", roomId);
       setLobby(false);
-      const pc = new RTCPeerConnection();
+      const pc = new RTCPeerConnection({
+        iceServers: [
+          { urls: "stun:stun.l.google.com:19302" }, // Free STUN
+        ],
+      });
+
       pc.setRemoteDescription(remoteSdp);
       const sdp = await pc.createAnswer();
       pc.setLocalDescription(sdp);
